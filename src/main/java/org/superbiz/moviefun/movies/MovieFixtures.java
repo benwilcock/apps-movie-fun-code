@@ -3,6 +3,8 @@ package org.superbiz.moviefun.movies;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,8 +16,10 @@ import static org.superbiz.moviefun.CsvUtils.readFromCsv;
 public class MovieFixtures {
 
     private final ObjectReader objectReader;
+    private ResourceLoader resourceLoader;
 
-    public MovieFixtures() {
+    @Autowired
+    public MovieFixtures(ResourceLoader resourceLoader) {
         CsvSchema schema = CsvSchema.builder()
             .addColumn("title")
             .addColumn("director")
@@ -25,9 +29,10 @@ public class MovieFixtures {
             .build();
 
         objectReader = new CsvMapper().readerFor(Movie.class).with(schema);
+        this.resourceLoader = resourceLoader;
     }
 
     public List<Movie> load() {
-        return readFromCsv(objectReader, "movie-fixtures.csv");
+        return readFromCsv(objectReader, "movie-fixtures.csv", resourceLoader);
     }
 }
