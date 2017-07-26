@@ -19,3 +19,8 @@ s3:
   accessKey: <access key id>
   secretKey: <secret access key>
   bucketName: <name of the bucket>
+
+rabbitmq:
+#  uri: amqp://guest:guest@localhost
+  uri: amqp://b080b479-3b20-4c8e-aeea-ceee64e527b4:8mcb2vfdnfbirdgq4hqmkntltb@10.0.4.83/c7def0bf-9097-4683-958d-f3a34ccb85d0
+  queue: my-rabbit-queue
