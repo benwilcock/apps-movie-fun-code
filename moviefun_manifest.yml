@@ -1,0 +1,17 @@
+applications:
+- name: moviefun
+  path: target/moviefun.war
+  instances: 1
+  memory: 1024M
+  disk_quota: 1024M
+  routes:
+  - route: moviefun-nonrecuperative-rider.apps.longs.pal.pivotal.io
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git
+  services:
+  - movies-mysql
+  stack: cflinuxfs2
+  env:
+    S3_ENDPOINTURL: http://s3.amazonaws.com
+    S3_ACCESSKEY: AKIAIDVMJ2AYU3WGNJEA
+    S3_SECRETKEY: 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
+    S3_BUCKETNAME: cf-6f16a76c-7841-421e-a502-5c582c7d4dc0
