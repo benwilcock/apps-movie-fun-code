@@ -4,7 +4,6 @@ group = "org.superbiz"
 version = "1.1.0-SNAPSHOT"
 
 dependencies{
-//    compile project(":components:movies")
     compile "org.springframework:spring-web:$springVersion"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "org.springframework:spring-core:$springVersion"

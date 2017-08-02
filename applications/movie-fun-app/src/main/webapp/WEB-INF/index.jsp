@@ -50,7 +50,7 @@
       <a class="btn btn-navbar" data-toggle="collapse"
          data-target=".nav-collapse"> <span class="icon-bar"></span> <span
           class="icon-bar"></span> <span class="icon-bar"></span>
-      </a> <a class="brand" href="#">Moviefun</a>
+      </a> <a class="brand" href="#">Mediafun</a>
       <!--/.nav-collapse -->
     </div>
   </div>
@@ -58,11 +58,12 @@
 
 <div class="container">
 
-  <h1>Moviefun</h1>
+  <h1>Mediafun</h1>
 
   <p>Please select one of the following links:</p>
-  <a href="setup">Setup</a> - Sets up the application with some sample data<br/>
-  <a href="moviefun">Index</a> - Start the application<br/>
+  <a href="setup">Setup</a> - Sets up the application with some sample Movies and Albums<br/>
+  <a href="moviefun">Movies</a> - Work with Movies<br/>
+  <a href="albums">Albums</a> - Work with Albums<br/>
 
 </div>
 <!-- /container -->
