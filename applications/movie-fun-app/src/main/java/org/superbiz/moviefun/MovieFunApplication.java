@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.superbiz.moviefun.moviesapi.MovieServlet;
 
 @SpringBootApplication
-public class Application {
+public class MovieFunApplication {
 
     public static void main(String... args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(MovieFunApplication.class, args);
     }
 
     @Bean
