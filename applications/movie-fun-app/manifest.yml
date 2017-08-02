@@ -1,0 +1,10 @@
+---
+memory: 1G
+instances: 1
+applications:
+- name: moviefun
+  random-route: true
+  path: build/libs/movie-fun-app-1.1.0-SNAPSHOT.war
+  env:
+    ALBUMS_URL: http://albums-service-semianalytical-disfeaturement.apps.longs.pal.pivotal.io/albums
+    MOVIES_URL: http://movies-service-ephebic-resistivity.apps.longs.pal.pivotal.io/movies
