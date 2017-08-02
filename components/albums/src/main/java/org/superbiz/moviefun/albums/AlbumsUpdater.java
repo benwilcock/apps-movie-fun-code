@@ -7,10 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.superbiz.moviefun.CsvUtils;
+import org.superbiz.moviefun.albums.Album;
+import org.superbiz.moviefun.albums.AlbumsRepository;
 import org.superbiz.moviefun.blobstore.Blob;
 import org.superbiz.moviefun.blobstore.BlobStore;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -24,11 +27,11 @@ public class AlbumsUpdater {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ObjectReader objectReader;
     private final BlobStore blobStore;
-    private final AlbumsBean albumsBean;
+    private final AlbumsRepository albumsRepository;
 
-    public AlbumsUpdater(BlobStore blobStore, AlbumsBean albumsBean) {
+    public AlbumsUpdater(BlobStore blobStore, AlbumsRepository albumsRepository) {
         this.blobStore = blobStore;
-        this.albumsBean = albumsBean;
+        this.albumsRepository = albumsRepository;
 
         CsvSchema schema = builder()
             .addColumn("artist")
@@ -49,42 +52,46 @@ public class AlbumsUpdater {
         }
 
         List<Album> albumsToHave = CsvUtils.readFromCsv(objectReader, maybeBlob.get().inputStream);
-        List<Album> albumsWeHave = albumsBean.getAlbums();
+        List<Album> albumsWeHave = albumsRepository.getAlbums();
 
         createNewAlbums(albumsToHave, albumsWeHave);
-        deleteOldAlbums(albumsToHave, albumsWeHave);
-        updateExistingAlbums(albumsToHave, albumsWeHave);
+//        deleteOldAlbums(albumsToHave, albumsWeHave);
+//        updateExistingAlbums(albumsToHave, albumsWeHave);
     }
 
 
     private void createNewAlbums(List<Album> albumsToHave, List<Album> albumsWeHave) {
-        Stream<Album> albumsToCreate = albumsToHave
-            .stream()
-            .filter(album -> albumsWeHave.stream().noneMatch(album::isEquivalent));
+        List<Album> albumsToCreate = new ArrayList<Album>();
 
-        albumsToCreate.forEach(albumsBean::addAlbum);
+        for (Album album : albumsToHave) {
+            if(!albumsWeHave.contains(album)){
+                albumsToCreate.add(album);
+            }
+        }
+
+        albumsToCreate.forEach(albumsRepository::addAlbum);
     }
 
-    private void deleteOldAlbums(List<Album> albumsToHave, List<Album> albumsWeHave) {
-        Stream<Album> albumsToDelete = albumsWeHave
-            .stream()
-            .filter(album -> albumsToHave.stream().noneMatch(album::isEquivalent));
+//    private void deleteOldAlbums(List<Album> albumsToHave, List<Album> albumsWeHave) {
+//        Stream<Album> albumsToDelete = albumsWeHave
+//            .stream()
+//            .filter(album -> albumsToHave.stream().noneMatch(album::isEquivalent));
+//
+//        albumsToDelete.forEach(albumsRepository::deleteAlbum);
+//    }
+//
+//    private void updateExistingAlbums(List<Album> albumsToHave, List<Album> albumsWeHave) {
+//        Stream<Album> albumsToUpdate = albumsToHave
+//            .stream()
+//            .map(album -> addIdToAlbumIfExists(albumsWeHave, album))
+//            .filter(Album::hasId);
+//
+//        albumsToUpdate.forEach(albumsRepository::updateAlbum);
+//    }
 
-        albumsToDelete.forEach(albumsBean::deleteAlbum);
-    }
-
-    private void updateExistingAlbums(List<Album> albumsToHave, List<Album> albumsWeHave) {
-        Stream<Album> albumsToUpdate = albumsToHave
-            .stream()
-            .map(album -> addIdToAlbumIfExists(albumsWeHave, album))
-            .filter(Album::hasId);
-
-        albumsToUpdate.forEach(albumsBean::updateAlbum);
-    }
-
-    private Album addIdToAlbumIfExists(List<Album> existingAlbums, Album album) {
-        Optional<Album> maybeExisting = existingAlbums.stream().filter(album::isEquivalent).findFirst();
-        maybeExisting.ifPresent(existing -> album.setId(existing.getId()));
-        return album;
-    }
+//    private Album addIdToAlbumIfExists(List<Album> existingAlbums, Album album) {
+//        Optional<Album> maybeExisting = existingAlbums.stream().filter(album::isEquivalent).findFirst();
+//        maybeExisting.ifPresent(existing -> album.setId(existing.getId()));
+//        return album;
+//    }
 }

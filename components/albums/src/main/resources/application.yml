@@ -1,0 +1,9 @@
+#spring:
+#  jpa:
+#    generate-ddl: true
+#    properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+#    hibernate.ddl-auto: create-drop
+#
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/albums?useSSL=false
+#    username: root

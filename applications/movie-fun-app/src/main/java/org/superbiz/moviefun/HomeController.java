@@ -1,29 +1,31 @@
 package org.superbiz.moviefun;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.superbiz.moviefun.albums.Album;
-import org.superbiz.moviefun.albums.AlbumFixtures;
-import org.superbiz.moviefun.albums.AlbumsBean;
-import org.superbiz.moviefun.movies.Movie;
-import org.superbiz.moviefun.movies.MovieFixtures;
-import org.superbiz.moviefun.movies.MoviesBean;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.superbiz.moviefun.albumsapi.AlbumInfo;
+import org.superbiz.moviefun.albumsapi.AlbumsClient;
+import org.superbiz.moviefun.moviesapi.MovieInfo;
+import org.superbiz.moviefun.moviesapi.MoviesClient;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class HomeController {
 
-    private final MoviesBean moviesBean;
-    private final AlbumsBean albumsBean;
-    private final MovieFixtures movieFixtures;
-    private final AlbumFixtures albumFixtures;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public HomeController(MoviesBean moviesBean, AlbumsBean albumsBean, MovieFixtures movieFixtures, AlbumFixtures albumFixtures) {
-        this.moviesBean = moviesBean;
-        this.albumsBean = albumsBean;
-        this.movieFixtures = movieFixtures;
-        this.albumFixtures = albumFixtures;
+    private final MoviesClient moviesClient;
+    private final AlbumsClient albumsClient;
+
+    public HomeController(MoviesClient moviesClient, AlbumsClient albumsClient) {
+        this.moviesClient = moviesClient;
+        this.albumsClient = albumsClient;
     }
 
     @GetMapping("/")
@@ -33,17 +35,31 @@ public class HomeController {
 
     @GetMapping("/setup")
     public String setup(Map<String, Object> model) {
-        for (Movie movie : movieFixtures.load()) {
-            moviesBean.addMovie(movie);
-        }
-
-        for (Album album : albumFixtures.load()) {
-            albumsBean.addAlbum(album);
-        }
-
-        model.put("movies", moviesBean.getMovies());
-        model.put("albums", albumsBean.getAlbums());
-
+        moviesClient.seed();
+        albumsClient.seed();
+        model.put("movies", moviesClient.getMovies());
+        model.put("albums", albumsClient.getAlbums());
         return "setup";
+    }
+
+    @GetMapping("/albums")
+    public String showAlbums(Map<String, Object> model) {
+        logger.debug("Getting all albums.");
+        model.put("albums", albumsClient.getAlbums());
+        return "albums";
+    }
+
+    @GetMapping("/albums/{albumId}")
+    public String details(@PathVariable long albumId, Map<String, Object> model) {
+        logger.debug("Getting album {}", albumId);
+        model.put("album", albumsClient.findById(albumId));
+        return "albumDetails";
+    }
+
+    @GetMapping("/movies")
+    public @ResponseBody
+    List<MovieInfo> listAllMovies() {
+        logger.debug("Getting all movies.");
+        return moviesClient.getMovies();
     }
 }

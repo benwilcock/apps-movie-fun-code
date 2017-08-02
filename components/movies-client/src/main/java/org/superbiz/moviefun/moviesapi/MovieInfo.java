@@ -1,18 +1,26 @@
-package org.superbiz.moviefun.movies;
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.superbiz.moviefun.moviesapi;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
-public class Movie implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+public class MovieInfo implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String director;
@@ -21,10 +29,10 @@ public class Movie implements Serializable {
     private String genre;
     private int rating;
 
-    public Movie() {
+    public MovieInfo() {
     }
 
-    public Movie(String title, String director, String genre, int rating, int year) {
+    public MovieInfo(String title, String director, String genre, int rating, int year) {
         this.director = director;
         this.title = title;
         this.year = year;
@@ -32,7 +40,7 @@ public class Movie implements Serializable {
         this.rating = rating;
     }
 
-    public Movie(String director, String title, int year) {
+    public MovieInfo(String director, String title, int year) {
         this.director = director;
         this.title = title;
         this.year = year;
@@ -91,14 +99,14 @@ public class Movie implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Movie movie = (Movie) o;
+        MovieInfo movieInfo = (MovieInfo) o;
 
-        if (id != movie.id) return false;
-        if (year != movie.year) return false;
-        if (rating != movie.rating) return false;
-        if (director != null ? !director.equals(movie.director) : movie.director != null) return false;
-        if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
-        return genre != null ? genre.equals(movie.genre) : movie.genre == null;
+        if (id != movieInfo.id) return false;
+        if (year != movieInfo.year) return false;
+        if (rating != movieInfo.rating) return false;
+        if (director != null ? !director.equals(movieInfo.director) : movieInfo.director != null) return false;
+        if (title != null ? !title.equals(movieInfo.title) : movieInfo.title != null) return false;
+        return genre != null ? genre.equals(movieInfo.genre) : movieInfo.genre == null;
     }
 
     @Override
